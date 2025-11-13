@@ -89,6 +89,7 @@ def register():
 
     try:
         username = input('    Masukkan Username : ')
+        if username <= 
         password = input('    Masukkan Password : ')
     except ValueError:
         print('    Password atau Username tidak valid!')
