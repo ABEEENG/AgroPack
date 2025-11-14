@@ -1,2 +1,9 @@
-Keterangan_Paket,Produk_Paket,Stok_Paket,Harga
-Paket Kombo,"Bibit jagung, pupuk kompos",10,25000
+Keterangan_Paket,Produk_Paket,Deskripsi_Produk,Stok_Paket,Harga
+Paket 1,Produk1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. In quis
+ultrices eros, quis congue diam. Vestibulum eu dolor tellus. Proin
+viverra tortor velit, ac tincidunt justo fringilla nec. Quisque
+vestibulum cursus urna. Phasellus leo risus, dapibus interdum finibus
+eu, mollis sit amet odio. Integer id varius libero. Etiam semper
+mauris at neque lobortis feugiat. In sollicitudin tempus urna ac
+elementum. Mauris blandit tellus a elit euismod, vel porta erat
+sagittis.",150,150000
