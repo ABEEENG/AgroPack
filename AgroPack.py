@@ -740,18 +740,87 @@ def EditAkun(role, username):
 def LaporanPenjualan():
     while True:
         os.system('cls')
-        df = pd.read_csv('Pemesanan.csv')
-        df_tampilan = df.loc[
-            df['Status_Pemesanan'] == 'Selesai', 
-            ['username', 'Waktu_Pemesanan', 'Paket_Dipesan', 'Produk_Paket', 'Jumlah', 'Harga']
-            ]
-        print(tabulate(df_tampilan, headers='keys', tablefmt='fancy_grid'))
+        header()
 
         print(
-            '    1) Pilih berdasarkan tanggal!\n'
-            '    2) Kembali\n'
+            '    1) Laporan per produk!\n'
+            '    2) Laporan per periode!\n'
+            '    3) Laporan Keseluruhan!\n'
+            '    4) Kembali'
         )
-         
+
+        Pilih = input('Pilih Menu ( 1 / 2 / 3 / 4 ) : ')
+
+        if Pilih == '1':
+            os.system('cls')
+            df = pd.read_csv('Pemesanan.csv')
+            df_laporan = df.groupby('Produk_Paket').agg({
+                'Harga': 'sum'
+            }).reset_index()
+            df_laporan.index += 1
+            print(tabulate(df_laporan, headers='keys', tablefmt='fancy_grid', showindex=True))
+            input('Tekan ENTER untuk kembali!')
+
+        elif Pilih == '2':
+            while True:
+                os.system('cls')
+                header()
+                df = pd.read_csv('Pemesanan.csv')
+                df['Waktu_Pemesanan'] = pd.to_datetime(df['Waktu_Pemesanan'], format='%Y-%m-%d %H:%M:%S')
+
+                try:
+                    print("    Masukkan tanggal dengan format (DD-MM-YYYY)!")
+                    tanggalawal = input("    Masukkan tanggal awal: ").strip()
+                    tanggalakhir = input("    Masukkan tanggal akhir: ").strip()
+                    
+                    tanggalawal = pd.to_datetime(tanggalawal, format='%d-%m-%Y')
+                    tanggalakhir = pd.to_datetime(tanggalakhir, format='%d-%m-%Y')
+                    
+                    if tanggalawal > tanggalakhir:
+                        input("    Tanggal awal tidak boleh lebih besar dari tanggal akhir! Tekan ENTER untuk melanjutkan!")
+                        continue
+
+                    tanggalakhir_filter = tanggalakhir + pd.Timedelta(days=1)
+                    break
+                except (ValueError, AttributeError):
+                    input("    Format tanggal salah! Gunakan format DD-MM-YYYY! Tekan ENTER untuk melanjutkan!")
+            while True:  
+                rentangwaktu = df[
+                    (df['Waktu_Pemesanan'] >= tanggalawal) & 
+                    (df['Waktu_Pemesanan'] < tanggalakhir_filter)
+                ]
+
+                laporan = rentangwaktu.groupby(rentangwaktu['Waktu_Pemesanan'].dt.date).agg({
+                    'Harga': 'sum'
+                    }).reset_index()
+                laporan.index += 1
+
+                print(f"\nLaporan Keuntungan {tanggalawal} s/d {tanggalakhir}:\n")
+
+                if len(laporan) > 0:
+                    print(tabulate(laporan, headers='keys', tablefmt='fancy_grid'))
+                    print(f"\nTotal Keuntungan: Rp {laporan['keuntungan'].sum():,.0f}")
+                    input('Tekan ENTER untuk melanjutkan!')
+                    break
+                else:
+                    os.system('cls')
+                    header()
+                    input("\n    Tidak ada transaksi pada periode tersebut! tekan ENTER untuk melanjutkan!")
+                    break
+        elif Pilih == '3':
+            os.system('cls')
+            df = pd.read_csv('Pemesanan.csv')
+            laporan = df['Harga'].sum()
+            print("\nLaporan Keseluruhan : ")
+            print(f"Total Keuntungan: Rp {laporan:,.0f}")
+            input('\n\n Tekan ENTER untuk melanjutkan!')
+
+        elif Pilih == '4':
+            break
+
+        else:
+            input('Input tidak valid! Tekan ENTER untuk melanjutkan!')
+
 
 def Feedback(username):
     while True:
