@@ -76,11 +76,19 @@ def register():
     while True:
         os.system('cls')
         header()
+        print(
+            '\n                            INFORMASI SINGKAT                         '
+            '\n    =================================================================='
+            '\n    Username harus lebih dari 8 karakter!'
+            '\n    Gunakan kombinasi huruf besar, huruf kecil, karakter unik serta'
+            '\n    angka agar passwordmu susah untuk ditembus hacker!' 
+            '\n    =================================================================='
+            )
 
         df = pd.read_csv('Akun.csv')
 
         try:
-            username = input('    Masukkan Username : ')
+            username = input('\n    Masukkan Username : ')
             if len(username) < 8:
                 input('    Username minimal memiliki 8 karakter! Tekan ENTER untuk melanjutkan!')
                 continue
@@ -104,7 +112,7 @@ def register():
                 df = pd.read_csv('Akun.csv')
                 df = pd.concat([df, pd.DataFrame([{'Username' : username, 'Password' : password, 'Role' : 'Pelanggan'}])], ignore_index=True)
                 df.to_csv('Akun.csv', index=False)
-                print('    Akun Berhasil Ditambahkan!')
+                input('    Akun Berhasil Ditambahkan! Tekan ENTER untuk melanjutkan')
                 break
 
         except ValueError:
@@ -148,40 +156,36 @@ def CekPassword(password):
 
 
 def login():
+    while True:
 
-    os.system('cls')
-    header()
-    
-    try:
-        username = input('    Masukkan Username : ')
+        os.system('cls')
+        header()
+
+        username = input('\n    Masukkan Username : ')
         password = input('    Masukkan Password : ')
-    except ValueError:
-        print('     Password atau Username tidak valid!')
-        input('     Tekan ENTER untuk melanjutkan')
-        return login()
-    
-    df = pd.read_csv('Akun.csv')
-    BarisData = df[(df['Username'] == username) & (df['Password'] == password)]
 
-    if not BarisData.empty:
-        role = BarisData['Role'].iloc[0]
-        if role == "Pemilik":
-            print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
-            input('    Tekan ENTER untuk melanjutkan')
-            pemilik(role, username)
-        elif role == "Admin":
-            print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
-            input('    Tekan ENTER untuk melanjutkan')
-            admin(role, username)
-        elif role == "Pelanggan":
-            print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
-            input('    Tekan ENTER untuk melanjutkan')
-            pelanggan(role, username)
+        df = pd.read_csv('Akun.csv')
+        BarisData = df[(df['Username'] == username) & (df['Password'] == password)]
 
-    else:
-        print('    Password atau Username salah! Silahkan Coba lagi.')
-        input('    Tekan ENTER untuk melanjutkan')
-        return login()
+        if not BarisData.empty:
+            role = BarisData['Role'].iloc[0]
+            if role == "Pemilik":
+                print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
+                input('    Tekan ENTER untuk melanjutkan')
+                pemilik(role, username)
+            elif role == "Admin":
+                print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
+                input('    Tekan ENTER untuk melanjutkan')
+                admin(role, username)
+            elif role == "Pelanggan":
+                print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
+                input('    Tekan ENTER untuk melanjutkan')
+                pelanggan(role, username)
+
+        else:
+            print('    Password atau Username salah! Silahkan Coba lagi.')
+            input('    Tekan ENTER untuk melanjutkan')
+            continue
 
 def pemilik(role, username):
     while True:
@@ -245,7 +249,7 @@ def admin(role, username):
         else:
             print('    Input tidak valid! Silahkan pilih lagi')
             input('    Tekan ENTER untuk melanjutkan')
-            return admin()
+            continue
 
 def pelanggan(role, username):
     while True:
@@ -280,10 +284,10 @@ def KelolaProduk(role, username):
         header()
 
         print(
-            '    1) Tampilkan Produk\n'
-            '    2) Tambah Produk\n'
-            '    3) Edit Produk\n'
-            '    4) Hapus Produk\n'
+            '    1) Tampilkan Paket\n'
+            '    2) Tambah Paket\n'
+            '    3) Edit Paket\n'
+            '    4) Hapus Paket\n'
             '    5) Kembali\n'
         )
         Pilih = input("    Pilih Menu! ( 1 / 2 / 3 / 4 / 5 ) : ")
@@ -564,12 +568,14 @@ def PesanProduk(role, username):
                             Baris = dfproduk[dfproduk['Keterangan_Paket'] == KetPaket]
                             harga_satuan = Baris['Harga'].iloc[0]
                             produk_paket = Baris['Produk_Paket'].iloc[0]
+                            stok_paket = Baris['Stok_Paket'].iloc[0]
                             deskripsi_produk = textwrap.fill(Baris['Deskripsi_Produk'].iloc[0], 100, subsequent_indent=' ' * len('Deksripsi produk : '))
                             nama_paket = Baris['Keterangan_Paket'].iloc[0]
                             print('==================== DETAIL PAKET ===========================')
                             print('Paket yang dipesan : ', nama_paket )
                             print('Produk paket dipesan : ', produk_paket)
                             print('Deskripsi produk :', deskripsi_produk)
+                            print('Stok Paket : ', stok_paket)
                             print('Harga per paket : ', harga_satuan)
                             print('================================================================')
                             print(
@@ -755,7 +761,8 @@ def LaporanPenjualan():
             os.system('cls')
             df = pd.read_csv('Pemesanan.csv')
             df_laporan = df.groupby('Produk_Paket').agg({
-                'Harga': 'sum'
+                'Jumlah' : 'sum',
+                'Harga' : 'sum'
             }).reset_index()
             df_laporan.index += 1
             print(tabulate(df_laporan, headers='keys', tablefmt='fancy_grid', showindex=True))
@@ -791,6 +798,7 @@ def LaporanPenjualan():
                 ]
 
                 laporan = rentangwaktu.groupby(rentangwaktu['Waktu_Pemesanan'].dt.date).agg({
+                    'Jumlah' : 'sum',
                     'Harga': 'sum'
                     }).reset_index()
                 laporan.index += 1
@@ -798,8 +806,9 @@ def LaporanPenjualan():
                 print(f"\nLaporan Keuntungan {tanggalawal} s/d {tanggalakhir}:\n")
 
                 if len(laporan) > 0:
+                    os.system('cls')
                     print(tabulate(laporan, headers='keys', tablefmt='fancy_grid'))
-                    print(f"\nTotal Keuntungan: Rp {laporan['keuntungan'].sum():,.0f}")
+                    print(f"\nTotal Keuntungan: Rp {laporan['Harga'].sum():,.0f}")
                     input('Tekan ENTER untuk melanjutkan!')
                     break
                 else:
