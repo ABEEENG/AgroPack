@@ -303,12 +303,12 @@ def KelolaProduk(role, username):
             df = pd.read_csv('Produk.csv')
             df.index += 1
             print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=True))
-            KetPaket_baru = input("Masukkan Keterangan Paket : ")
+            KetPaket_baru = textwrap.fill(input('Masukkan Keterangan Paket : '), 50)
             if KetPaket_baru in df['Keterangan_Paket'].values:
                 input('Keterangan paket sudah ada! Tekan ENTER untuk kembali!')
             else:
-                Produk_baru = input("Masukkan Produk Paket : ")
-                Deskripsi = textwrap.fill(input('Masukkan Deskripsi Produk : '), 70) 
+                Produk_baru = textwrap.fill(input('Masukkan Produk : '), 50) 
+                Deskripsi = textwrap.fill(input('Masukkan Deskripsi Produk : '), 100) 
 
                 while True:
                     try:
@@ -393,12 +393,15 @@ def editproduk(role, username):
                 df.index += 1
                 print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=True))
                 while True:
-                    KetPaket_lama = input('Masukkan Keterangan Paket Lama : ')
+                    KetPaket_lama = textwrap.fill(input('Masukkan keterangan paket yang ingin diubah : '), 50)
                     if KetPaket_lama in df['Keterangan_Paket'].values:
-                        KetPaket_baru = input('Masukkan Keterangan Paket Baru : ')
+                        KetPaket_baru = textwrap.fill(input('Masukkan keterangan paket yang baru! : '), 50)
                         df.loc[df['Keterangan_Paket'] == KetPaket_lama, 'Keterangan_Paket'] = KetPaket_baru
                         df.to_csv('Produk.csv', index=False)   
                         input('Paket Berhasil Dirubah! Tekan ENTER untuk kembali')
+                        break
+                    else: 
+                        input('Keterangan paket tidak ditemukan! Tekan ENTER untuk melanjutkan! ')
                         break
                     
             elif Pilih == '2':
@@ -407,12 +410,15 @@ def editproduk(role, username):
                 df.index += 1
                 print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=True))
                 while True:
-                    KetPaket = input('Masukkan keterangan paket yang ingin diubah produknya! : ')
+                    KetPaket = textwrap.fill(input('Masukkan keterangan paket yang ingin diubah produknya! : '), 50)
                     if KetPaket in df['Keterangan_Paket'].values:
-                        Produk_baru = input('Masukkan Produk Baru : ')
+                        Produk_baru = textwrap.fill(input('Masukkan produk yang baru! : '), 50)
                         df.loc[df['Keterangan_Paket'] == KetPaket, 'Produk_Paket'] = Produk_baru
                         df.to_csv('Produk.csv', index=False)    
                         input('Produk Berhasil Dirubah! Tekan ENTER untuk kembali')
+                        break
+                    else:
+                        input('Keterangan paket tidak ditemukan! tekan ENTER untuk melanjutkan!')
                         break
 
             elif Pilih == '3':
@@ -421,7 +427,7 @@ def editproduk(role, username):
                 df.index += 1
                 print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=True))
                 while True:
-                    KetPaket = input('Masukkan keterangan paket yang ingin diubah harganya! : ')
+                    KetPaket = textwrap.fill(input('Masukkan keterangan paket yang ingin diubah harganya! : '), 50)
                     if KetPaket in df['Keterangan_Paket'].values:
                         try:
                             Harga_baru = int(input('Masukkan Harga Baru : '))
@@ -437,7 +443,7 @@ def editproduk(role, username):
                             input('Input tidak valid! Masukkan Angka!')
                             break
                     else:
-                        input('Paket yang dicari tidak tersedia!')
+                        input('Keterangan paket tidak ditemukan! tekan ENTER untuk melanjutkan!')
 
             elif Pilih == '4':
                 os.system('cls')
@@ -445,7 +451,7 @@ def editproduk(role, username):
                 df.index += 1
                 print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=True))
                 while True:
-                    KetPaket = input('Masukkan Keterangan Paket : ')
+                    KetPaket = textwrap.fill(input('Masukkan keterangan paket yang ingin diubah stoknya! : '), 50)
                     if KetPaket in df['Keterangan_Paket'].values:
                         try:
                             Stok_baru = int(input('Masukkan Stok Baru : '))
@@ -458,17 +464,21 @@ def editproduk(role, username):
                                 input('Produk Berhasil Dirubah! Tekan ENTER untuk kembali')
                                 break
                         except ValueError:
-                            input('Input tidak valid! Masukkang angka!')    
+                            input('Input tidak valid! Masukkang angka!')   
+                    else:
+                        input('Keterangan paket tidak ditemukan! tekan ENTER untuk melanjutkan!') 
 
             elif Pilih == '5':
                 while True:
-                    KetPaket = input('Masukkan keterangan paket yang ingin diubah deskripsinya! : ')
+                    KetPaket = textwrap.fill(input('Masukkan keterangan paket yang ingin diubah deskripsinya! : '), 50)
                     if KetPaket in df['Keterangan_Paket'].values:
                         Deskripsi = textwrap.fill(input('Masukkan deskripsi produk yang baru! : '), 100)
                         df.loc[df['Keterangan_Paket'] == KetPaket, 'Deskripsi_Produk'] = Deskripsi
                         df.to_csv('Produk.csv', index=False)   
                         input('Deskripsi Produk Berhasil Dirubah! Tekan ENTER untuk kembali')
                         break
+                    else:
+                        input('Keterangan paket tidak ditemukan! tekan ENTER untuk melanjutkan!')
             
             elif Pilih == '6':
                 break
@@ -848,7 +858,7 @@ def Feedback(username):
             os.system('cls')
             header()
             df = pd.read_csv('Feedback.csv')
-            Feedback = textwrap.fill(input("    Kirim Feedback mu sekarang! ( Akun akan disembunyikan ) : "), 100)
+            Feedback = textwrap.fill(input("    Kirim Feedback mu sekarang! ( Akun akan disembunyikan ) : "), 60)
             df = pd.concat([df, pd.DataFrame([{'Username' : username,'Feedback' : Feedback, 'Balasan' : 'Pesan Belom Dibalas'}])], ignore_index=True)
             df.to_csv('Feedback.csv', index=False)
             print('    Terima kasih feedbacknya!!!!')
@@ -901,7 +911,7 @@ def MelihatFeedback(username):
             try:
                 indexfeedback = int(input('    Masukkan Index dibalas : '))
                 if indexfeedback in df.index:
-                    Balasan = textwrap.fill(input('Masukkan balasan : '))
+                    Balasan = textwrap.fill(input("Kirimkan balasan! : "), 60)
                     df.loc[indexfeedback, 'Balasan'] = Balasan
                     df.to_csv('Feedback.csv', index=False)
                     input('Balasan berhasil di kirimkan! Tekan ENTER untuk melanjutkan')
