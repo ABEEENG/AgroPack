@@ -200,7 +200,7 @@ def pemilik(role, username):
             '    5) Edit Akun\n'
             '    6) Logout\n'
         )
-        Pilih = input('    Pilih Menu! ( 1 / 2 / 3 / 4 / 5 ) : ')
+        Pilih = input('    Pilih Menu! ( 1 / 2 / 3 / 4 / 5 / 6 ) : ')
         if Pilih == '1':
             KelolaAkun()
         elif Pilih == '2':
@@ -233,7 +233,7 @@ def admin(role, username):
         )
 
 
-        Pilih = input('    Pilih Menu! ( 1 / 2 / 3 / 4 ) : ')
+        Pilih = input('    Pilih Menu! ( 1 / 2 / 3 / 4 / 5 / 6 ) : ')
         if Pilih == '1':
             PesanProduk(role, username)
         if Pilih == '2':
@@ -307,8 +307,11 @@ def KelolaProduk(role, username):
             if KetPaket_baru in df['Keterangan_Paket'].values:
                 input('Keterangan paket sudah ada! Tekan ENTER untuk kembali!')
             else:
-                Produk_baru = textwrap.fill(input('Masukkan Produk : '), 50) 
+                Produk_baru = textwrap.fill(input('Masukkan Produk : '), 50)
                 Deskripsi = textwrap.fill(input('Masukkan Deskripsi Produk : '), 100) 
+                if not Produk_baru or Deskripsi or KetPaket_baru:
+                    input('Input kosong! Harus memiliki isi!')
+                    continue
 
                 while True:
                     try:
@@ -346,8 +349,7 @@ def KelolaProduk(role, username):
                     df = pd.read_csv('Produk.csv')
                     df.index += 1
                     print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=True))
-                    KetPaket = input('Masukkan paket yang ingin dihapus! : ')
-                    
+                    KetPaket = input('Masukkan paket yang ingin dihapus! ( Tekan ENTER untuk kembali ke menu utama! ) : ')
 
                     if KetPaket in df['Keterangan_Paket'].values:
                         df = df[df['Keterangan_Paket'] != KetPaket]
@@ -355,8 +357,13 @@ def KelolaProduk(role, username):
                         print('Data berhasil di hapus!')
                         input('Tekan ENTER untuk kembali!')
                         break
+
+                    elif not KetPaket:
+                        break
+             
                     else:
                         input('Paket tidak ada! Tekan ENTER untuk kembali!')
+                        break
                     
         elif Pilih == '5':
             break
@@ -385,7 +392,7 @@ def editproduk(role, username):
                 '6) Kembali\n'
             )
 
-            Pilih = input("Pilih data yang ingin diubah! ( 1 / 2 / 3 / 4 ) : ")
+            Pilih = input("Pilih data yang ingin diubah! ( 1 / 2 / 3 / 4 / 5 / 6 ) : ")
             
             if Pilih == '1':
                 os.system('cls')
@@ -396,6 +403,9 @@ def editproduk(role, username):
                     KetPaket_lama = textwrap.fill(input('Masukkan keterangan paket yang ingin diubah : '), 50)
                     if KetPaket_lama in df['Keterangan_Paket'].values:
                         KetPaket_baru = textwrap.fill(input('Masukkan keterangan paket yang baru! : '), 50)
+                        if not KetPaket_baru:
+                            input('Input tidak boleh kosong! Tekan ENTER untuk melanjutkan')
+                            break
                         df.loc[df['Keterangan_Paket'] == KetPaket_lama, 'Keterangan_Paket'] = KetPaket_baru
                         df.to_csv('Produk.csv', index=False)   
                         input('Paket Berhasil Dirubah! Tekan ENTER untuk kembali')
@@ -413,6 +423,9 @@ def editproduk(role, username):
                     KetPaket = textwrap.fill(input('Masukkan keterangan paket yang ingin diubah produknya! : '), 50)
                     if KetPaket in df['Keterangan_Paket'].values:
                         Produk_baru = textwrap.fill(input('Masukkan produk yang baru! : '), 50)
+                        if not Produk_baru:
+                            input('Produk tidak boleh kosong! Tekan ENTER untuk melanjutkan!')
+                            break 
                         df.loc[df['Keterangan_Paket'] == KetPaket, 'Produk_Paket'] = Produk_baru
                         df.to_csv('Produk.csv', index=False)    
                         input('Produk Berhasil Dirubah! Tekan ENTER untuk kembali')
@@ -473,6 +486,9 @@ def editproduk(role, username):
                     KetPaket = textwrap.fill(input('Masukkan keterangan paket yang ingin diubah deskripsinya! : '), 50)
                     if KetPaket in df['Keterangan_Paket'].values:
                         Deskripsi = textwrap.fill(input('Masukkan deskripsi produk yang baru! : '), 100)
+                        if not Deskripsi:
+                            input('Deskripsi tidak boleh kosong! Tekan ENTER untuk melanjutkan')
+                            break
                         df.loc[df['Keterangan_Paket'] == KetPaket, 'Deskripsi_Produk'] = Deskripsi
                         df.to_csv('Produk.csv', index=False)   
                         input('Deskripsi Produk Berhasil Dirubah! Tekan ENTER untuk kembali')
@@ -498,7 +514,7 @@ def KelolaAkun():
         )
 
 
-        Pilih = input('    Pilih Menu ( 1 / 2 / 3) : ')
+        Pilih = input('    Pilih Menu ( 1 / 2 / 3 ) : ')
         if Pilih == '1':
             os.system('cls')
             df = pd.read_csv('Akun.csv')
@@ -546,7 +562,7 @@ def PesanProduk(role, username):
             '    5) Kembali\n'
         )
 
-        Pilih = input('Pilih Menu! : ')
+        Pilih = input('Pilih Menu! ( 1 / 2 / 3 / 4 / 5 ): ')
         if Pilih == '1':
             os.system('cls')
             df = pd.read_csv('Produk.csv')
@@ -577,59 +593,63 @@ def PesanProduk(role, username):
                             os.system('cls')
                             Baris = dfproduk[dfproduk['Keterangan_Paket'] == KetPaket]
                             harga_satuan = Baris['Harga'].iloc[0]
-                            produk_paket = Baris['Produk_Paket'].iloc[0]
+                            produk_paket = (textwrap.fill(Baris['Produk_Paket'].iloc[0], 100, subsequent_indent=' ' * len('Produk paket dipesan :  ')))
                             stok_paket = Baris['Stok_Paket'].iloc[0]
                             deskripsi_produk = textwrap.fill(Baris['Deskripsi_Produk'].iloc[0], 100, subsequent_indent=' ' * len('Deksripsi produk : '))
                             nama_paket = Baris['Keterangan_Paket'].iloc[0]
-                            print('==================== DETAIL PAKET ===========================')
-                            print('Paket yang dipesan : ', nama_paket )
-                            print('Produk paket dipesan : ', produk_paket)
-                            print('Deskripsi produk :', deskripsi_produk)
-                            print('Stok Paket : ', stok_paket)
-                            print('Harga per paket : ', harga_satuan)
-                            print('================================================================')
+                            print('=============================================== DETAIL PAKET =================================================')
+                            print('\nPaket yang dipesan : ', nama_paket, '' )
+                            print('\nProduk paket dipesan : ', produk_paket)
+                            print('\nDeskripsi produk :', deskripsi_produk)
+                            print('\nStok Paket : ', stok_paket)
+                            print('\nHarga per paket : ', harga_satuan)
+                            print('\n============================================================================================================')
                             print(
                                 '         1) Lanjutkan Pesanan          \n'
                                 '         2) Batalkan Pesanan           \n'
                             )
                             Pilih = input('Apakah anda ingin melanjutkan pesanan? ( 1 \ 2 )')
                             if Pilih == '1':
-                                while True:
-                                    try:
-                                        JumlahPaket = int(input('Masukkan jumlah paket yang ingin dipesan : '))
-                                        stok_lama = dfproduk.loc[dfproduk['Keterangan_Paket'] == KetPaket, 'Stok_Paket'].iloc[0]
-                                        stok_baru = stok_lama - JumlahPaket
-                                        if JumlahPaket < 1:
-                                            input('Jumlah paket yang dibeli tidak boleh kurang dari 1! Tekan ENTER untuk melanjutkan!')
-                                        elif JumlahPaket > stok_lama:
-                                            input('Stok tidak mencukupi! tekan ENTER untuk lanjut!')
-                                        else:
-                                            harga_total = harga_satuan * JumlahPaket
-                                            Kontak = input('Silahkan masukkan nomor aktif untuk dihubungi : ')
-                                            if role == 'Admin':
-                                                status_pemesanan = 'Diproses'
-                                            elif role == 'Pelanggan':
-                                                status_pemesanan = 'Pending'
-                                            dfpesan = pd.concat([dfpesan, pd.DataFrame([{
-                                                'username' : username,
-                                                'Waktu_Pemesanan' : datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                                'Paket_Dipesan' : KetPaket, 
-                                                'Produk_Paket' : produk_paket, 
-                                                'Jumlah' : JumlahPaket, 
-                                                'Harga' : harga_total,
-                                                'Status_Pemesanan' : status_pemesanan,
-                                                'Kontak_Pemesan' : "'" + Kontak
-                                                }])], ignore_index=True)
-                                            dfpesan.to_csv('Pemesanan.csv', index=False)
-                                            dfproduk.loc[dfproduk['Keterangan_Paket'] == KetPaket, 'Stok_Paket'] = stok_baru
-                                            dfproduk.to_csv('Produk.csv', index=False)
-                                            print('Pesanan Berhasil Ditambahkan! Silahkan menunggu pesanan diproses!')
-                                            print('======================== TERIMA KASIH ==========================')
-                                            input('Tekan ENTER untuk melanjutkan!')
-                                            return PesanProduk(role, username)
+                                try:
+                                    JumlahPaket = int(input('Masukkan jumlah paket yang ingin dipesan : '))
+                                    stok_lama = dfproduk.loc[dfproduk['Keterangan_Paket'] == KetPaket, 'Stok_Paket'].iloc[0]
+                                    stok_baru = stok_lama - JumlahPaket
+                                    if JumlahPaket < 1:
+                                        input('Jumlah paket yang dibeli tidak boleh kurang dari 1! Tekan ENTER untuk melanjutkan!')
+                                        continue
+                                    elif JumlahPaket > stok_lama:
+                                        input('Stok tidak mencukupi! tekan ENTER untuk lanjut!')
+                                        continue
+                                    else:
+                                        harga_total = harga_satuan * JumlahPaket
+                                        Kontak = input('Silahkan masukkan kontak aktif untuk dihubungi (Dapat berupa E-Mail ataupun Nomor Telepon) : ')
+                                        if not Kontak:
+                                            input('Kontak tidak boleh kosong! tekan ENTER untuk melanjutkan!')
+                                            continue
+                                        if role == 'Admin':
+                                            status_pemesanan = 'Diproses'
+                                        elif role == 'Pelanggan':
+                                            status_pemesanan = 'Pending'
+                                        dfpesan = pd.concat([dfpesan, pd.DataFrame([{
+                                            'username' : username,
+                                            'Waktu_Pemesanan' : datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                            'Paket_Dipesan' : KetPaket, 
+                                            'Produk_Paket' : produk_paket, 
+                                            'Jumlah' : JumlahPaket, 
+                                            'Harga' : harga_total,
+                                            'Status_Pemesanan' : status_pemesanan,
+                                            'Kontak_Pemesan' : "'" + Kontak
+                                            }])], ignore_index=True)
+                                        dfpesan.to_csv('Pemesanan.csv', index=False)
+                                        dfproduk.loc[dfproduk['Keterangan_Paket'] == KetPaket, 'Stok_Paket'] = stok_baru
+                                        dfproduk.to_csv('Produk.csv', index=False)
+                                        print('Pesanan Berhasil Ditambahkan! Silahkan menunggu pesanan diproses!')
+                                        print('\n=============================================== TERIMA KASIH ==================================================')
+                                        input('Tekan ENTER untuk melanjutkan!')
+                                        return PesanProduk(role, username)
                                         
-                                    except ValueError:
-                                        print('Input tidak valid! Masukkan Angka!')
+                                except ValueError:
+                                    print('Input tidak valid! Masukkan Angka!')
                             elif Pilih == '2':
                                 return PesanProduk(role, username)
                             else:
@@ -639,7 +659,7 @@ def PesanProduk(role, username):
                         break
 
                     else:
-                        print('Input tidak valid!')
+                        print('Input tidak valid! atau paket yang dicari tidak ada!')
 
         elif Pilih == "3":
             os.system('cls')
@@ -697,25 +717,28 @@ def EditAkun(role, username):
             '3) Kembali'
         )
 
-        Pilih = input('Pilih Menu : ')
+        Pilih = input('Pilih Menu ( 1 / 2 / 3 ) : ')
 
     
         if Pilih == '1':
             while True:
                 os.system('cls')
                 df = pd.read_csv('Akun.csv')
+                header()
                 print('Username Anda : ', username)
                 print('1) Kembali')
-                username_baru = input('Masukkan Username Baru ( "1" Untuk Kembali! ): ')
+                username_baru = input('    Masukkan Username Baru ( "1" Untuk Kembali! ): ')
                 if username_baru == '1':
                     break
                 elif username_baru in df['Username'].values:
-                    print('Username sudah digunakan!')
-                    input('Tekan ENTER untuk melanjutkan')
+                    print('    Username sudah digunakan!')
+                    input('    Tekan ENTER untuk melanjutkan')
+                elif len(username_baru) < 8:
+                    input('    Username tidak boleh kurang dari 8 karakter! Tekan ENTER untuk melanjutkan! ')
                 else:
                     df.loc[df['Username'] == username, 'Username'] = username_baru
                     df.to_csv('Akun.csv', index=False)  
-                    input('Username berhasil diubah! Tekan ENTER untuk melanjutkan')
+                    input('    Username berhasil diubah! Tekan ENTER untuk melanjutkan')
                     username = username_baru
                     if role == 'Pemilik':
                         return pemilik(role, username)
@@ -736,8 +759,8 @@ def EditAkun(role, username):
                 elif password_lama == df.loc[df['Username'] == username, 'Password'].iloc[0]:
                     password_baru = input('Masukkan password baru : ')    
                     Keamanan = CekPassword(password_baru)
-                    if Keamanan == False:
-                        print('Passwordmu masih cukup lemah! coba gunakan karakter unik seperti "!@#$%^&*()" dan angka!')
+                    if len(password_baru) < 8:
+                        print('Password tidak boleh kurang dari 8 karakter!')
                         input('Tekan ENTER untuk melanjutkan')
                     elif Keamanan == True:
                         df = pd.read_csv('Akun.csv')
@@ -745,6 +768,9 @@ def EditAkun(role, username):
                         df.to_csv('Akun.csv', index=False)  
                         input('Password berhasil diubah! Tekan ENTER untuk melanjutkan')
                         break
+                    elif Keamanan == False:
+                        print('Passwordmu masih cukup lemah! coba gunakan karakter unik seperti "!@#$%^&*()" dan angka!')
+                        input('Tekan ENTER untuk melanjutkan')
                 else:
                     input('Password lama salah! Silahkan coba lagi!')
         elif Pilih == '3':
@@ -852,7 +878,7 @@ def Feedback(username):
             '    3) Kembali'
         )
 
-        Pilih = input('Pilih Menu ( 1 / 2 ): ')
+        Pilih = input('Pilih Menu ( 1 / 2 / 3 ): ')
 
         if Pilih == '1':
             os.system('cls')
