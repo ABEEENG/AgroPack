@@ -57,18 +57,38 @@ def menu():
 
                             1) LOGIN
                             2) REGISTER
+                            3) Keluar
 
         ''')
 
-        Pilih = input("    Pilih Menu! (1 / 2) : ") 
+        Pilih = input("    Pilih Menu! ( 1 / 2 / 3 ) : ") 
         if Pilih == "1":
             login()
         elif Pilih == "2":
             register()
+        elif Pilih == "3":
+            os.system('cls')
+            header()
+            print(
+                '\n    Apakah anda ingin benar - benar keluar dari aplikasi? ( Y / N )'
+            )
+            Pilih = input('    Keluar Aplikasi? ( Y / N ) : ')
+            if Pilih.lower() == 'y':
+                os.system('cls')
+                header()
+                print('\n    TERIMA KASIH TELAH MENGGUNAKAN APLIKASI KAMI! ')
+                input('    Tekan ENTER untuk melanjutkan!')
+                os.system('cls')
+                exit()
+            elif Pilih.lower() == 'n':
+                continue
+            else:
+                input('    Input tidak valid! Tekan ENTER untuk melanjutkan!')
+
         else:
             print("     Pilihan tidak sesuai! Silahkan input kembali!")
             input("     Tekan ENTER untuk melanjutkan!")
-            return menu()
+
         
 def register():
     while True:
@@ -96,7 +116,7 @@ def register():
             if username in df['Username'].values:
                 print('    Username sudah digunakan!')
                 input('    Tekan ENTER untuk melanjutkan')
-                return register()
+                continue
             
             password = input('    Masukkan Password ( Tekan ENTER untuk kembali! ): ')
 
@@ -156,40 +176,37 @@ def CekPassword(password):
     return Keamanan
 
 def login():
-    while True:
+    os.system('cls')
+    header()
 
-        os.system('cls')
-        header()
+    username = input('\n    Masukkan Username ( Tekan ENTER untuk kembali! ) : ')
+    if not username.strip():
+        return
+    password = input('    Masukkan Password ( Tekan ENTER untuk kembali! ) : ')
+    if not password.strip():
+        return
+    
+    df = pd.read_csv('Akun.csv')
+    BarisData = df[(df['Username'] == username) & (df['Password'] == password)]
 
-        username = input('\n    Masukkan Username ( Tekan ENTER untuk kembali! ) : ')
-        if not username.strip():
-            break
-        password = input('    Masukkan Password ( Tekan ENTER untuk kembali! ) : ')
-        if not password.strip():
-            break
-
-        df = pd.read_csv('Akun.csv')
-        BarisData = df[(df['Username'] == username) & (df['Password'] == password)]
-
-        if not BarisData.empty:
-            role = BarisData['Role'].iloc[0]
-            if role == "Pemilik":
-                print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
-                input('    Tekan ENTER untuk melanjutkan')
-                pemilik(role, username)
-            elif role == "Admin":
-                print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
-                input('    Tekan ENTER untuk melanjutkan')
-                admin(role, username)
-            elif role == "Pelanggan":
-                print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
-                input('    Tekan ENTER untuk melanjutkan')
-                pelanggan(role, username)
-
-        else:
-            print('    Password atau Username salah! Silahkan Coba lagi.')
+    if not BarisData.empty:
+        role = BarisData['Role'].iloc[0]
+        if role == "Pemilik":
+            print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
             input('    Tekan ENTER untuk melanjutkan')
-            continue
+            pemilik(role, username)
+        elif role == "Admin":
+            print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
+            input('    Tekan ENTER untuk melanjutkan')
+            admin(role, username)
+        elif role == "Pelanggan":
+            print('    Login berhasil! Selamat datang', BarisData['Username'].iloc[0])
+            input('    Tekan ENTER untuk melanjutkan')
+            pelanggan(role, username)
+    else:
+        print('    Password atau Username salah! Silahkan Coba lagi.')
+        input('    Tekan ENTER untuk melanjutkan')
+        
 
 def pemilik(role, username):
     while True:
@@ -216,11 +233,14 @@ def pemilik(role, username):
         elif Pilih == '5':
             EditAkun(role, username)
         elif Pilih == '6':
-            logout()
+            os.system('cls')
+            header()
+            input ("\n============= Berhasil Logout! Tekan ENTER untuk benar benar logout! ==============")
+            os.system('cls')
+            break
         else:
             print('    Input tidak valid! Silahkan pilih lagi')
             print('    Tekan ENTER untuk melanjutkan')
-            return pemilik(role, username)
 
 def admin(role, username):
     while True:
@@ -249,7 +269,11 @@ def admin(role, username):
         elif Pilih == '5':
             EditAkun(role, username)
         elif Pilih == '6':
-            logout()
+            os.system('cls')
+            header()
+            input ("\n============= Berhasil Logout! Tekan ENTER untuk benar benar logout! ==============")
+            os.system('cls')
+            return
         else:
             print('    Input tidak valid! Silahkan pilih lagi')
             input('    Tekan ENTER untuk melanjutkan')
@@ -276,7 +300,11 @@ def pelanggan(role, username):
         elif Pilih == '3':
             Feedback(username)
         elif Pilih == '4':
-            logout()
+            os.system('cls')
+            header()
+            input ("\n============= Berhasil Logout! Tekan ENTER untuk benar benar logout! ==============")
+            os.system('cls')
+            return
         else:
             print('    Input tidak valid! Silahkan pilih lagi')
 
@@ -529,7 +557,7 @@ def KelolaAkun():
         os.system('cls')
         df = pd.read_csv('Akun.csv')
         df_tampilan = df.loc[
-            (df['Role'] == 'Pelanggan') | (df['Role'] == 'Admin'), 
+            (df['Role'] == 'Admin'), 
             ['Username', 'Role']
             ]
         df_tampilan.index += 1
@@ -538,8 +566,8 @@ def KelolaAkun():
         
 
         print(
-            '    1) Tampilkan Akun\n'
-            '    2) Ubah Role Akun\n'
+            '    1) Tampilkan Akun Admin\n'
+            '    2) Tambah Akun Admin\n'
             '    3) Kembali'
         )
 
@@ -554,23 +582,41 @@ def KelolaAkun():
         elif Pilih == '2':
             while True:
                 os.system('cls')
-                print(tabulate(df_tampilan, headers='keys', tablefmt='fancy_grid', showindex=True))
-                username = input('Masukkan username yang ingin diubah role ( Tekan ENTER untuk kembali ): ')
-
+                print(
+                    '    ================== TAMBAH AKUN ADMIN ======================'
+                )
+                username = input('\n    Masukkan Username ( Tekan ENTER untuk kembali! ) : ')
                 if not username.strip():
                     break
-                elif username in df['Username'].values:
-                    Role_baru = input('Masukkan Role Baru ( Admin / Pelanggan ) : ')
-                    if Role_baru.lower() == 'admin' or Role_baru.lower() == 'pelanggan':
-                        df.loc[df['Username'] == username, 'Role'] = Role_baru.capitalize()
-                        df.to_csv('Akun.csv', index=False)  
-                        input('Role berhasil diubah!')
-                        break
-                    else:
-                        print('Tidak ada role yang cocok dengan input!')
-                        continue
-                else:
-                    input('Username tidak ditemukan! Tekan ENTER untuk melanjutkan!')
+                elif len(username.lstrip().rstrip()) < 8:
+                    input('    Username minimal memiliki 8 karakter! Tekan ENTER untuk melanjutkan!')
+                    continue
+
+                if username in df['Username'].values:
+                    print('    Username sudah digunakan!')
+                    input('    Tekan ENTER untuk melanjutkan')
+                    continue
+
+                password = input('    Masukkan Password ( Tekan ENTER untuk kembali! ): ')
+
+                if not password.strip():
+                    break
+                elif len(password.lstrip().rstrip()) < 8:
+                    input('    Panjang password minimal 8! Tekan ENTER untuk melanjutkan!')
+                    continue
+
+                Keamanan = CekPassword(password)
+
+                if Keamanan == False:
+                    print('    Passwordmu masih cukup lemah! coba gunakan karakter unik seperti "!@#$%^&*()" dan angka!')
+                    input('    Tekan ENTER untuk melanjutkan')
+                elif Keamanan == True:
+                    input('    Registrasi berhasil! tekan ENTER untuk melanjutkan!')
+                    df = pd.read_csv('Akun.csv')
+                    df = pd.concat([df, pd.DataFrame([{'Username' : username.lstrip().rstrip(), 'Password' : password, 'Role' : 'Admin'}])], ignore_index=True)
+                    df.to_csv('Akun.csv', index=False)
+                    input('    Akun Admin Berhasil Ditambahkan! Tekan ENTER untuk melanjutkan')
+                    break
 
         elif Pilih == '3':
             break
@@ -672,7 +718,7 @@ def PesanProduk(role, username):
                                         '         1) Lanjutkan Pesanan          \n'
                                         '         2) Batalkan Pesanan           \n'
                                         )
-                                        konfirmasi = input('    Lanjutkan Pesanan? ( 1 / 2 )')
+                                        Pilih = input('    Lanjutkan Pesanan? ( 1 / 2 ) : ')
                                         if Pilih == '1':
                                             Kontak = input('Silahkan masukkan kontak aktif untuk dihubungi (Dapat berupa E-Mail ataupun Nomor Telepon) : ')
                                             if not Kontak.strip():
@@ -698,19 +744,19 @@ def PesanProduk(role, username):
                                             print('Pesanan Berhasil Ditambahkan! Silahkan menunggu pesanan diproses!')
                                             print('\n=============================================== TERIMA KASIH ==================================================')
                                             input('Tekan ENTER untuk melanjutkan!')
-                                            return PesanProduk(role, username)
+                                            return 
                                         elif Pilih == '2':
-                                            return PesanProduk(role, username)
+                                            return 
                                         else:
                                             input('    Input tidak valid! Tekan ENTER untuk melanjutkan!')
                                 except ValueError:
-                                    print('Input tidak valid! Masukkan Angka!')
+                                    input('Input tidak valid! Masukkan Angka! Tekan ENTER untuk melanjutkan')
                             elif Pilih == '2':
-                                return PesanProduk(role, username)
+                                return 
                             else:
-                                print('Input tidak valid!')
+                                input('Input tidak valid! tekan ENTER untuk lanjut!')
                     else:
-                        print('Input tidak valid! atau paket yang dicari tidak ada!')
+                        input('Input tidak valid! atau paket yang dicari tidak ada! Tekan ENTER untuk lanjut!')
 
         elif Pilih == "3":
             os.system('cls')
@@ -1141,14 +1187,6 @@ def KelolaPesanan():
             
         else:
             input('Input tidak valid! tekan ENTER untuk melanjutkan!')
-
-def logout():
-    os.system('cls')
-    header()
-    input ("\n============= Berhasil Logout! Tekan ENTER untuk benar benar logout! ==============")
-    os.system('cls')
-    exit()
-
 
 menu()
     
